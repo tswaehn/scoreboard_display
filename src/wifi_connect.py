@@ -1,6 +1,6 @@
 import time
 import ssl
-import wifi
+from src import wifi
 import socketpool
 import adafruit_requests
 

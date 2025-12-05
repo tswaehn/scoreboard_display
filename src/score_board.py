@@ -38,19 +38,20 @@ bg_tilegrid = displayio.TileGrid(bg_bitmap, pixel_shader=bg_palette)
 SPRITES_SCORE.append(bg_tilegrid)
 
 shape_palette = displayio.Palette(1)
-shape_palette[0] = 0x000800  # green rectangle
+shape_palette[0] = 0x000800   # green rectangle
 
 shape_palette2 = displayio.Palette(1)
-shape_palette2[0] = 0x000000  # green rectangle
+shape_palette2[0] = 0x000000   # green rectangle
 
 shape_palette3 = displayio.Palette(1)
-shape_palette3[0] = 0x101010  # green rectangle
+shape_palette3[0] = 0x101010   # green rectangle
 
 max_score = 25
 
-default_color = 0x008000
-highlight_color = 0x808080
-race_color = 0x800000
+
+default_color=0x008000
+highlight_color=0x808080
+race_color=0x800000
 
 # Filled rectangle
 rect_a1 = vectorio.Rectangle(
@@ -92,6 +93,7 @@ rect_b2 = vectorio.Rectangle(
 )
 SPRITES_SCORE.append(rect_b2)
 
+
 ####
 field_a = vectorio.Rectangle(
     pixel_shader=shape_palette2,
@@ -111,10 +113,12 @@ field_b = vectorio.Rectangle(
 )
 SPRITES_SCORE.append(field_b)
 
+
+
 # --- Add text ---
 score_a = label.Label(
     terminalio.FONT,
-    text=f"",
+    text=f"{0:2d}",
     color=default_color,
     x=4,
     y=11,
@@ -123,7 +127,7 @@ score_a = label.Label(
 
 score_b = label.Label(
     terminalio.FONT,
-    text=f"",
+    text=f"{0:2d}",
     color=default_color,
     x=38,
     y=21,
@@ -140,63 +144,58 @@ DISPLAY.root_group = SPRITES_SCORE
 
 a = 0
 b = 0
-def get_font_color(score):
-    if score >= 20:
-        return race_color
-    if score % 5 == 0 and score > 5:
-        return race_color
-    else:
-        return default_color
 
 
 while True:
-    a = 0
-    b = 0
 
     score_a.text = f"{a:2d}"
     score_b.text = f"{b:2d}"
-    score_a.color = get_font_color(a)
-    score_b.color = get_font_color(b)
 
     time.sleep(5)
 
     while True:
 
-        # step = random.choice([0, 1])
+        #step = random.choice([0, 1])
         side = random.choice([0, 1])
 
         if side:
             a += 1
             score_a.text = f"{a:2d}"
-            score_a.color = highlight_color
-            # field_a.pixel_shader=shape_palette3
-            rect_a1.pixel_shader = shape_palette3
-            rect_a2.pixel_shader = shape_palette3
+            score_a.color=highlight_color
+            #field_a.pixel_shader=shape_palette3
+            rect_a1.pixel_shader=shape_palette3
+            rect_a2.pixel_shader=shape_palette3
 
         else:
             b += 1
             score_b.text = f"{b:2d}"
-            score_b.color = highlight_color
-            # field_b.pixel_shader=shape_palette3
-            rect_b1.pixel_shader = shape_palette3
-            rect_b2.pixel_shader = shape_palette3
+            score_b.color=highlight_color
+            #field_b.pixel_shader=shape_palette3
+            rect_b1.pixel_shader=shape_palette3
+            rect_b2.pixel_shader=shape_palette3
 
         time.sleep(0.5)
 
+        if a % 5 == 0 and a > 5:
+            score_a.color=race_color
+        else:
+            score_a.color=default_color
 
-        score_a.color = get_font_color(a)
-        score_b.color = get_font_color(b)
+        if b % 5 == 0 and b > 5:
+            score_b.color=race_color
+        else:
+            score_b.color=default_color
 
-        field_a.pixel_shader = shape_palette2
-        field_b.pixel_shader = shape_palette2
+        field_a.pixel_shader=shape_palette2
+        field_b.pixel_shader=shape_palette2
 
-        rect_a1.pixel_shader = shape_palette
-        rect_a2.pixel_shader = shape_palette
+        rect_a1.pixel_shader=shape_palette
+        rect_a2.pixel_shader=shape_palette
 
-        rect_b1.pixel_shader = shape_palette
-        rect_b2.pixel_shader = shape_palette
+        rect_b1.pixel_shader=shape_palette
+        rect_b2.pixel_shader=shape_palette
 
-        if (a >= max_score or b >= max_score) and (a - b >= 2 or b - a >= 2):
+        if (a >= max_score or b >= max_score) and (a-b >= 2 or b-a >= 2):
             break;
 
         wait = random.choice([1, 3])
@@ -205,14 +204,17 @@ while True:
 
     # match finished
 
-    d = 0
-    for i in range(20):
-        score_a.color = highlight_color
-        score_b.color = highlight_color
-        time.sleep(0.25+d)
-        score_a.color = get_font_color(a)
-        score_b.color = get_font_color(b)
-        time.sleep(0.25+d)
-        d+=0.05
+    a = 0
+    b = 0
 
+    for i in range(20):
+        score_a.color=highlight_color
+        score_b.color=highlight_color
+        time.sleep(0.25)
+        score_a.color=default_color
+        score_b.color=default_color
+        time.sleep(0.25)
+
+
+    SPRITES_SCORE.hidden = True
 
