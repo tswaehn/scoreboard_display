@@ -12,6 +12,9 @@ TEST_URL = "https://httpbin.org/get"
 # or any other URL, e.g. "https://example.com"
 # -------------------------------
 
+pool = None
+context = None
+requests = None
 
 def connect_wifi():
     print("Connecting to WiFi:", WIFI_SSID)
@@ -34,12 +37,14 @@ def connect_wifi():
 
 
 def http_get_test():
-    print("Creating socket pool...")
-    pool = socketpool.SocketPool(wifi.radio)
-    print("Creating SSL context...")
-    context = ssl.create_default_context()
-    print("Creating requests session...")
-    requests = adafruit_requests.Session(pool, context)
+    global pool, context, requests
+    if pool is None:
+        print("Creating socket pool...")
+        pool = socketpool.SocketPool(wifi.radio)
+        print("Creating SSL context...")
+        context = ssl.create_default_context()
+        print("Creating requests session...")
+        requests = adafruit_requests.Session(pool, context)
 
     print("Sending GET to:", TEST_URL)
     try:
@@ -49,6 +54,11 @@ def http_get_test():
         print("Body:")
         print(response.text)
         response.close()
+        if response.status_code != 200:
+            print("HTTP GET failed!")
+            return False
+        return True
     except Exception as e:
         print("HTTP request failed:", e)
+        return False
 

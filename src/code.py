@@ -13,7 +13,7 @@ pixel = neopixel.NeoPixel(
 
 while True:
     for i in range(3):
-        pixel[0] = (255, 0, 0)
+        pixel[0] = (255, 255, 255)
         time.sleep(0.2)
         pixel[0] = (0, 255, 0)
         time.sleep(0.2)
@@ -30,10 +30,14 @@ while True:
         else:
             break
 
-    pixel[0] = (0, 0, 255)
-
-    http_get_test()
-
     print("Done. Looping every 30s.")
     while True:
-        time.sleep(30)
+        pixel[0] = (0, 255, 255)
+
+        if http_get_test():
+            # ok
+            pixel[0] = (0, 0, 255)
+        else:
+            pixel[0] = (255, 0, 255)
+
+        time.sleep(10)
